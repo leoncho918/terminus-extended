@@ -13,8 +13,12 @@ RSpec.describe Terminus::Aspects::Extensions::Renderer, :db do
 
     let :context do
       {
-        "extension" => {"fields" => [], "values" => {}},
-        "model" => model.liquid_attributes.stringify_keys!,
+        "extension" => {
+          "css_classes" => "screen screen--#{model.name} screen--1bit screen--landscape screen--1x",
+          "fields" => [],
+          "values" => {},
+          "data" => {}
+        },
         "sensors" => []
       }
     end

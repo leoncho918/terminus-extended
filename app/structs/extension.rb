@@ -14,7 +14,11 @@ module Terminus
           all[key] = value
         end
 
-        Hash(data).merge "fields" => all_fields, "values" => values
+        {
+          "data" => data,
+          "fields" => all_fields,
+          "values" => values
+        }
       end
 
       def screen_label = "Extension #{label}"

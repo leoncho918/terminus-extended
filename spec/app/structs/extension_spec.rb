@@ -9,7 +9,7 @@ RSpec.describe Terminus::Structs::Extension do
 
   describe "#liquid_attributes" do
     it "answers empty data and fields when nothing exists" do
-      expect(extension.liquid_attributes).to eq({"fields" => [], "values" => {}})
+      expect(extension.liquid_attributes).to eq({"data" => {}, "fields" => [], "values" => {}})
     end
 
     it "answers data and fields when they exist" do
@@ -24,7 +24,7 @@ RSpec.describe Terminus::Structs::Extension do
       ]
 
       expect(extension.liquid_attributes).to eq(
-        "id" => 123,
+        "data" => {"id" => 123},
         "fields" => [
           {"keyname" => "one", "default" => 1},
           {"keyname" => "two"},

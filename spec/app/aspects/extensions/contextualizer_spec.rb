@@ -8,8 +8,15 @@ RSpec.describe Terminus::Aspects::Extensions::Contextualizer, :db do
   using Refinements::Hash
 
   describe "#call" do
-    let(:extension) { Factory.structs[:extension, fields: [{"keyname" => "one", "default" => 1}]] }
-    let(:model) { Factory[:model, name: "test"] }
+    let :extension do
+      Factory.structs[
+        :extension,
+        fields: [{"keyname" => "one", "default" => 1}],
+        data: {"label" => "Test"}
+      ]
+    end
+
+    let(:model) { Factory[:model, name: "test", css: {"classes" => {"size" => "screen--lg"}}] }
     let(:device) { Factory[:device, model_id: model.id] }
     let(:sensor) { Factory[:device_sensor, device_id: device.id] }
 
@@ -18,10 +25,12 @@ RSpec.describe Terminus::Aspects::Extensions::Contextualizer, :db do
 
       expect(contextualizer.call(extension, model_id: model.id, device_id: device.id)).to eq(
         "extension" => {
+          "data" => {"label" => "Test"},
           "fields" => [{"keyname" => "one", "default" => 1}],
-          "values" => {"one" => 1}
+          "values" => {"one" => 1},
+          "css_classes" => "screen screen--test screen--1bit screen--landscape " \
+                           "screen--lg screen--1x"
         },
-        "model" => {"bit_depth" => 1, "name" => "test", "orientation" => "landscape"},
         "sensors" => [
           {
             "device_id" => device.id,
@@ -41,8 +50,7 @@ RSpec.describe Terminus::Aspects::Extensions::Contextualizer, :db do
       extension = Factory.structs[:extension]
 
       expect(contextualizer.call(extension)).to eq(
-        "extension" => {"fields" => [], "values" => {}},
-        "model" => nil,
+        "extension" => {"css_classes" => nil, "data" => {}, "fields" => [], "values" => {}},
         "sensors" => []
       )
     end
