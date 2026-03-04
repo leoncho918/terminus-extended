@@ -6,6 +6,7 @@ RSpec.describe Terminus::Repositories::Playlist, :db do
   subject(:repository) { described_class.new }
 
   let(:playlist) { Factory[:playlist] }
+  let(:item_repository) { Terminus::Repositories::PlaylistItem.new }
 
   describe "#all" do
     it "answers all records by created date/time" do
@@ -18,6 +19,43 @@ RSpec.describe Terminus::Repositories::Playlist, :db do
 
     it "answers empty array when records don't exist" do
       expect(repository.all).to eq([])
+    end
+  end
+
+  describe "#create_with_items" do
+    let(:screen) { Factory[:screen] }
+    let(:items) { [{screen_id: screen.id}] }
+
+    it "answers record" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      expect(playlist).to have_attributes(name: "test", label: "Test")
+    end
+
+    it "creates associations" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+
+      expect(item_repository.all).to include(
+        having_attributes(playlist_id: playlist.id, screen_id: screen.id, position: 1)
+      )
+    end
+
+    it "assigns current item ID when there are items" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      item = item_repository.all.first
+
+      expect(playlist.current_item_id).to eq(item.id)
+    end
+
+    it "doesn't create record when IDs are invalid" do
+      repository.create_with_items({name: "test", label: "Test"}, [{screen_id: 666}])
+    rescue ROM::SQL::ForeignKeyConstraintError
+      expect(repository.all).to eq([])
+    end
+
+    it "doesn't associations when IDs are invalid" do
+      repository.create_with_items({name: "test", label: "Test"}, [{screen_id: 666}])
+    rescue ROM::SQL::ForeignKeyConstraintError
+      expect(item_repository.all).to eq([])
     end
   end
 
@@ -124,6 +162,61 @@ RSpec.describe Terminus::Repositories::Playlist, :db do
       update = repository.update_current_item playlist.id, nil
 
       expect(update.current_item_id).to be(nil)
+    end
+  end
+
+  describe "#update_with_devices" do
+    let(:screen) { Factory[:screen] }
+    let(:items) { [{screen_id: screen.id}] }
+
+    it "answers updated record" do
+      update = repository.update_with_items playlist.id, {name: "test", label: "Test"}, items
+      expect(update).to have_attributes(name: "test", label: "Test")
+    end
+
+    it "updates existing associations" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      repository.update_with_items playlist.id, {}, [{screen_id: screen.id}]
+
+      expect(item_repository.all).to include(
+        having_attributes(playlist_id: playlist.id, screen_id: screen.id, position: 1)
+      )
+    end
+  end
+
+  describe "#update_with_items" do
+    let(:screen) { Factory[:screen] }
+    let(:items) { [{screen_id: screen.id}] }
+
+    it "answers updated record" do
+      update = repository.update_with_items playlist.id, {name: "test", label: "Test"}, items
+      expect(update).to have_attributes(name: "test", label: "Test")
+    end
+
+    it "updates existing associations" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      repository.update_with_items playlist.id, {}, [{screen_id: screen.id}, {screen_id: screen.id}]
+
+      expect(item_repository.all).to include(
+        having_attributes(playlist_id: playlist.id, screen_id: screen.id, position: 1),
+        having_attributes(playlist_id: playlist.id, screen_id: screen.id, position: 2)
+      )
+    end
+
+    it "updates removes items when empty" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      repository.update_with_items playlist.id, {}, []
+
+      expect(item_repository.all).to eq([])
+    end
+
+    it "doesn't removes associations when items are nil" do
+      playlist = repository.create_with_items({name: "test", label: "Test"}, items)
+      repository.update_with_items playlist.id, {}, nil
+
+      expect(item_repository.all).to include(
+        having_attributes(playlist_id: playlist.id, screen_id: screen.id, position: 1)
+      )
     end
   end
 
