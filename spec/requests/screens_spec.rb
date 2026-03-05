@@ -48,6 +48,41 @@ RSpec.describe "/api/screens", :db do
     expect(json_payload).to eq(data: [])
   end
 
+  it "creates with playlist ID" do
+    playlist = Factory[:playlist]
+
+    post routes.path(:api_screen_create),
+         {
+           screen: {
+             playlist_id: playlist.id,
+             model_id: model.id,
+             label: "Test",
+             name: "test",
+             content: "<p>n/a</p>"
+           }
+         }.to_json,
+         "HTTP_AUTHORIZATION" => access_token,
+         "CONTENT_TYPE" => "application/json"
+
+    expect(json_payload).to match(
+      data: {
+        model_id: model.id,
+        id: kind_of(Integer),
+        label: "Test",
+        name: "test",
+        filename: "test.png",
+        uri: %r(memory://\h{32}.png),
+        mime_type: "image/png",
+        bit_depth: 1,
+        size: kind_of(Integer),
+        width: 800,
+        height: 480,
+        created_at: match_rfc_3339,
+        updated_at: match_rfc_3339
+      }
+    )
+  end
+
   it "creates image from HTML" do
     post routes.path(:api_screen_create),
          {screen: {model_id: model.id, label: "Test", name: "test", content: "<p>n/a</p>"}}.to_json,
