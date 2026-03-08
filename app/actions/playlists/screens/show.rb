@@ -1,20 +1,18 @@
 # frozen_string_literal: true
 
-require "refinements/array"
-
 module Terminus
   module Actions
     module Playlists
       module Screens
         # The show action.
-        class Show < Hanami::Action
+        class Show < Action
           include Deps[
             :htmx,
             repository: "repositories.playlist",
             item_repository: "repositories.playlist_item"
           ]
 
-          using Refinements::Array
+          include Initable[slide_window: Aspects::Playlists::SlideWindow]
 
           params do
             required(:playlist_id).filled :integer
@@ -43,10 +41,7 @@ module Terminus
           end
 
           def view_settings request, playlist
-            before, current, after = playlist.screens.ring.find do |first, middle, last|
-              break first, middle, last if middle.id == request.params[:id]
-            end
-
+            before, current, after = slide_window.new(playlist).screens request.params[:id]
             view_settings = {playlist:, before:, current:, after:}
             view_settings[:layout] = false if htmx.request? request.env, :request, "true"
 
