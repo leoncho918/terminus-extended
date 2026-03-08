@@ -17,6 +17,7 @@ detectors:
   ControlParameter:
     exclude:
       - Terminus::Aspects::PasswordEncryptor#call
+      - Terminus::Aspects::Playlists::SlideWindow#screens
   FeatureEnvy:
     exclude:
       - Terminus::Action#authorize
