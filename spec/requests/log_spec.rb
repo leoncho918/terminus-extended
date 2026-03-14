@@ -47,7 +47,7 @@ RSpec.describe "/api/log", :db do
   end
 
   context "with valid payload" do
-    before { post routes.path(:api_log_create), payload.to_json, **headers }
+    before { post routes.path(:api_log), payload.to_json, **headers }
 
     it "create record" do
       expect(repository.all.first).to have_attributes(
@@ -79,7 +79,7 @@ RSpec.describe "/api/log", :db do
   context "with invalid ID header" do
     before do
       headers.delete "HTTP_ID"
-      post routes.path(:api_log_create), payload.to_json, **headers
+      post routes.path(:api_log), payload.to_json, **headers
     end
 
     it "answers problem details" do
@@ -103,7 +103,7 @@ RSpec.describe "/api/log", :db do
   end
 
   context "with invalid payload" do
-    before { post routes.path(:api_log_create), {logs: []}.to_json, **headers }
+    before { post routes.path(:api_log), {logs: []}.to_json, **headers }
 
     it "doesn't create record" do
       expect(repository.all).to eq([])

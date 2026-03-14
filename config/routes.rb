@@ -16,45 +16,49 @@ module Terminus
 
     get "/", to: "dashboard.show", as: :root
 
-    get "/api/devices", to: "api.devices.index", as: :api_devices
-    get "/api/devices/:id", to: "api.devices.show", as: :api_device
-    post "/api/devices", to: "api.devices.create", as: :api_device_create
-    patch "/api/devices/:id", to: "api.devices.patch", as: :api_device_patch
-    delete "/api/devices/:id", to: "api.devices.delete", as: :api_device_delete
+    # rubocop:todo Metrics/BlockLength
+    scope "api" do
+      get "/devices", to: "api.devices.index", as: :devices
+      get "/devices/:id", to: "api.devices.show", as: :device
+      post "/devices", to: "api.devices.create", as: :device_create
+      patch "/devices/:id", to: "api.devices.patch", as: :device_patch
+      delete "/devices/:id", to: "api.devices.delete", as: :device_delete
 
-    get "/api/display", to: "api.display.show", as: :api_display
+      resource :display, to: "api.display", only: :show
 
-    get "/api/firmware", to: "api.firmware.index", as: :api_firmware
-    get "/api/firmware/:id", to: "api.firmware.show", as: :api_firmware_show
-    post "/api/firmware", to: "api.firmware.create", as: :api_firmware_create
-    patch "/api/firmware/:id", to: "api.firmware.patch", as: :api_firmware_patch
-    delete "/api/firmware/:id", to: "api.firmware.delete", as: :api_firmware_delete
+      get "/firmware", to: "api.firmware.index", as: :firmware
+      get "/firmware/:id", to: "api.firmware.show", as: :firmware_show
+      post "/firmware", to: "api.firmware.create", as: :firmware_create
+      patch "/firmware/:id", to: "api.firmware.patch", as: :firmware_patch
+      delete "/firmware/:id", to: "api.firmware.delete", as: :firmware_delete
 
-    post "/api/log", to: "api.log.create", as: :api_log_create
+      resource :log, to: "api.log", only: :create
 
-    get "/api/models", to: "api.models.index", as: :api_models
-    get "/api/models/:id", to: "api.models.show", as: :api_model
-    post "/api/models", to: "api.models.create", as: :api_model_create
-    patch "/api/models/:id", to: "api.models.patch", as: :api_model_patch
-    delete "/api/models/:id", to: "api.models.delete", as: :api_model_delete
+      get "/models", to: "api.models.index", as: :models
+      get "/models/:id", to: "api.models.show", as: :model
+      post "/models", to: "api.models.create", as: :model_create
+      patch "/models/:id", to: "api.models.patch", as: :model_patch
+      delete "/models/:id", to: "api.models.delete", as: :model_delete
 
-    get "/api/playlists", to: "api.playlists.index", as: :api_playlists
-    get "/api/playlists/:id", to: "api.playlists.show", as: :api_playlist
-    post "/api/playlists", to: "api.playlists.create", as: :api_playlist_create
-    patch "/api/playlists/:id", to: "api.playlists.patch", as: :api_playlist_patch
-    delete "/api/playlists/:id", to: "api.playlists.delete", as: :api_playlist_delete
+      get "/playlists", to: "api.playlists.index", as: :playlists
+      get "/playlists/:id", to: "api.playlists.show", as: :playlist
+      post "/playlists", to: "api.playlists.create", as: :playlist_create
+      patch "/playlists/:id", to: "api.playlists.patch", as: :playlist_patch
+      delete "/playlists/:id", to: "api.playlists.delete", as: :playlist_delete
 
-    get "/api/screens", to: "api.screens.index", as: :api_screens
-    post "/api/screens", to: "api.screens.create", as: :api_screen_create
-    patch "/api/screens/:id", to: "api.screens.patch", as: :api_screen_patch
-    delete "/api/screens/:id", to: "api.screens.delete", as: :api_screen_delete
+      get "/screens", to: "api.screens.index", as: :screens
+      post "/screens", to: "api.screens.create", as: :screen_create
+      patch "/screens/:id", to: "api.screens.patch", as: :screen_patch
+      delete "/screens/:id", to: "api.screens.delete", as: :screen_delete
 
-    get "/api/setup", to: "api.setup.show", as: :api_setup
+      resource :setup, to: "api.setup", only: :show
+    end
+    # rubocop:enable Metrics/BlockLength
 
-    delete "/bulk/devices/:device_id/logs",
-           to: "bulk.devices.logs.delete",
-           as: :bulk_device_logs_delete
-    delete "/bulk/firmware", to: "bulk.firmware.delete", as: :bulk_firmware_delete
+    scope "bulk" do
+      delete "/devices/:device_id/logs", to: "bulk.devices.logs.delete", as: :device_logs_delete
+      delete "/firmware", to: "bulk.firmware.delete", as: :firmware_delete
+    end
 
     get "/devices", to: "devices.index", as: :devices
     get "/devices/:id", to: "devices.show", as: :device
@@ -68,8 +72,7 @@ module Terminus
     get "/devices/:device_id/logs/:id", to: "devices.logs.show", as: :device_log
     delete "/devices/:device_id/logs/:id", to: "devices.logs.delete", as: :device_log_delete
 
-    get "/designer", to: "designer.show", as: :designer
-    post "/designer", to: "designer.create", as: :designer_create
+    resource :designer, to: "designer", only: %i[show create]
 
     get "/extensions", to: "extensions.index", as: :extensions
     get "/extensions/new", to: "extensions.new", as: :extension_new
@@ -140,7 +143,7 @@ module Terminus
     get "/playlists/:playlist_id/screens", to: "playlists.screens.index", as: :playlist_screens
     get "/playlists/:playlist_id/screens/:id", to: "playlists.screens.show", as: :playlist_screen
 
-    get "/problem_details", to: "problem_details.index", as: :problem_details
+    resources :problem_details, to: "problem_details", only: :index
 
     get "/screens", to: "screens.index", as: :screens
     get "/screens/:id", to: "screens.show", as: :screen
