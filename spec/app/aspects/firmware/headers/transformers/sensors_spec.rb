@@ -2,18 +2,20 @@
 
 require "hanami_helper"
 
-RSpec.describe Terminus::Aspects::Firmware::Headers::SensorsTransformer do
+RSpec.describe Terminus::Aspects::Firmware::Headers::Transformers::Sensors do
   subject(:parser) { described_class.new }
 
   describe "#call" do
-    let :content do
-      "make=Sensirion;model=SCD41;kind=humidity;value=26;unit=percent;created_at=1735714800," \
-      "make=Sensirion;model=SCD41;kind=temperature;value=20.10;unit=celcius;created_at=1735714800"
-    end
-
     it "answers records hash" do
-      expect(parser.call(content)).to eq(
-        [
+      headers = {
+        HTTP_SENSORS: <<~VALUE.delete("\n")
+          make=Sensirion;model=SCD41;kind=humidity;value=26;unit=percent;created_at=1735714800,
+          make=Sensirion;model=SCD41;kind=temperature;value=20.10;unit=celcius;created_at=1735714800
+        VALUE
+      }
+
+      expect(parser.call(headers)).to be_success(
+        HTTP_SENSORS: [
           {
             make: "Sensirion",
             model: "SCD41",
@@ -37,19 +39,23 @@ RSpec.describe Terminus::Aspects::Firmware::Headers::SensorsTransformer do
     end
 
     it "answers partial records with only single key and value" do
-      expect(parser.call("make=Sensirion")).to eq([{make: "Sensirion", source: "device"}])
+      headers = {HTTP_SENSORS: "make=Sensirion"}
+
+      expect(parser.call(headers)).to be_success(
+        HTTP_SENSORS: [{make: "Sensirion", source: "device"}]
+      )
     end
 
     it "answers empty array when no key/value pairs exist" do
-      expect(parser.call("make")).to eq([])
+      expect(parser.call({HTTP_SENSORS: "make"})).to be_success(HTTP_SENSORS: [])
     end
 
     it "answers empty array when blank" do
-      expect(parser.call("")).to eq([])
+      expect(parser.call({HTTP_SENSORS: ""})).to be_success(HTTP_SENSORS: [])
     end
 
     it "answers empty array when nil" do
-      expect(parser.call(nil)).to eq([])
+      expect(parser.call({HTTP_SENSORS: nil})).to be_success(HTTP_SENSORS: [])
     end
   end
 end
