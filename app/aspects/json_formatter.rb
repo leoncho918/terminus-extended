@@ -14,8 +14,7 @@ module Terminus
       def call data
         case data
           in nil | Dry::Core::EMPTY_ARRAY | Dry::Core::EMPTY_HASH then Dry::Core::EMPTY_STRING
-          in Array | Hash => content
-            JSON data, indent: "  ", space: " ", object_nl: "\n", array_nl: "\n"
+          in Array | Hash then JSON data, indent: "  ", space: " ", object_nl: "\n", array_nl: "\n"
           else fail TypeError, "Unknown type to format as JSON for: #{data.inspect}."
         end
       end
