@@ -5,6 +5,7 @@ plugins: rubocop-sequel
 
 Metrics/AbcSize:
   Exclude:
+    - app/aspects/screens/converters/color.rb
     - app/aspects/screens/converters/monochrome.rb
     - app/aspects/screens/converters/png.rb
     - app/aspects/screens/shoter.rb
@@ -24,6 +25,7 @@ Metrics/MethodLength:
     - wifi_percentage
   Exclude:
     - app/aspects/screens/color_mapper.rb
+    - app/aspects/screens/converters/color.rb
     - app/aspects/screens/converters/monochrome.rb
     - app/aspects/screens/converters/png.rb
     - app/aspects/screens/shoter.rb
