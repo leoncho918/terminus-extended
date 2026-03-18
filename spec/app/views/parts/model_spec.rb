@@ -16,12 +16,12 @@ RSpec.describe Terminus::Views::Parts::Model do
 
   describe "#alpine_palettes" do
     it "answers filled array string" do
-      allow(model).to receive(:palette_ids).and_return(%w[bw gray-4 gray-16])
+      allow(model).to receive(:palette_names).and_return(%w[bw gray-4 gray-16])
       expect(part.alpine_palettes).to eq(%(['bw','gray-4','gray-16']))
     end
 
     it "answers empty array string when empty" do
-      allow(model).to receive(:palette_ids).and_return([])
+      allow(model).to receive(:palette_names).and_return([])
       expect(part.alpine_palettes).to eq("[]")
     end
 
@@ -94,7 +94,7 @@ RSpec.describe Terminus::Views::Parts::Model do
 
   describe "#palettes" do
     it "answers sentence when IDs are present" do
-      allow(model).to receive(:palette_ids).and_return(%w[bw gray-4 gray-16])
+      allow(model).to receive(:palette_names).and_return(%w[bw gray-4 gray-16])
       expect(part.palettes).to eq("bw, gray-4, and gray-16")
     end
 

@@ -14,9 +14,9 @@ module Terminus
         using Refinements::Array
 
         def alpine_palettes
-          Array(palette_ids).map { %('#{it}') }
-                            .join(",")
-                            .then { "[#{it}]" }
+          Array(palette_names).map { %('#{it}') }
+                              .join(",")
+                              .then { "[#{it}]" }
         end
 
         def dimensions = "#{width}x#{height}"
@@ -30,7 +30,7 @@ module Terminus
           end
         end
 
-        def palettes = palette_ids.to_sentence
+        def palettes = palette_names.to_sentence
 
         def type = mime_type ? mime_type.delete_prefix("image/").upcase : "Unknown"
       end

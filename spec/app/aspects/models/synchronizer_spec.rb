@@ -23,7 +23,7 @@ RSpec.describe Terminus::Aspects::Models::Synchronizer, :db do
                           height: 480,
                           offset_x: 10,
                           offset_y: 15,
-                          palette_ids: %w[bw gray-4],
+                          palette_names: %w[bw gray-4],
                           css: {classes: {device: "screen-v2", size: "screen-lg"}}
                         ]
                       ]
@@ -62,7 +62,7 @@ RSpec.describe Terminus::Aspects::Models::Synchronizer, :db do
         height: 480,
         offset_x: 10,
         offset_y: 15,
-        palette_ids: %w[bw gray-4],
+        palette_names: %w[bw gray-4],
         css: {"classes" => {"device" => "screen-v2", "size" => "screen-lg"}}
       )
     end
@@ -85,7 +85,7 @@ RSpec.describe Terminus::Aspects::Models::Synchronizer, :db do
         height: 480,
         offset_x: 10,
         offset_y: 15,
-        palette_ids: %w[bw gray-4],
+        palette_names: %w[bw gray-4],
         css: {"classes" => {"device" => "screen-v2", "size" => "screen-lg"}}
       )
     end

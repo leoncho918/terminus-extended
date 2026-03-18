@@ -149,31 +149,31 @@
 
   <%= scope(
         :form_field,
-        key: :palette_ids,
+        key: :palette_names,
         errors:,
-        alpine: {data: "{palette_ids: #{model ? model.alpine_palettes : []}, nascence: '', index: 0}"}
+        alpine: {data: "{palette_names: #{model ? model.alpine_palettes : []}, nascence: '', index: 0}"}
       ).render do %>
 
-    <%= form.hidden_field :palette_ids, id: :model_palette_ids, "x-bind:value" => "palette_ids.join(' ')" %>
+    <%= form.hidden_field :palette_names, id: :model_palette_names, "x-bind:value" => "palette_names.join(' ')" %>
 
-    <label class="key" for="palette_ids">
+    <label class="key" for="palette_names">
       Palette IDs
       <%= render "shared/popovers/triggers/default", name: :palettes %>
     </label>
 
-    <%= tag.input id: :palette_ids,
-                  name: :palette_ids,
+    <%= tag.input id: :palette_names,
+                  name: :palette_names,
                   class: :value,
                   placeholder: "Type your ID and hit enter to create.",
                   "x-model" => "nascence",
-                  "x-on:keydown.enter.prevent" => "if (nascence.trim() !== '') { palette_ids.push(nascence.trim()); nascence = '';}" %>
+                  "x-on:keydown.enter.prevent" => "if (nascence.trim() !== '') { palette_names.push(nascence.trim()); nascence = '';}" %>
 
     <div class="bit-pills">
-      <template x-for="(id, index) in palette_ids" x-bind="index">
+      <template x-for="(id, index) in palette_names" x-bind="index">
         <button type="button"
                 class="bit-pill bit-pill-active"
                 x-text="id"
-                x-on:click="palette_ids.splice(index, 1)">
+                x-on:click="palette_names.splice(index, 1)">
         </button>
       </template>
     </div>

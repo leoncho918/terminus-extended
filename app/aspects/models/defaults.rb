@@ -14,7 +14,7 @@ module Terminus
         scale_factor: 1,
         width: 800,
         height: 480,
-        palette_ids: nil,
+        palette_names: nil,
         css: nil
       }.freeze
     end

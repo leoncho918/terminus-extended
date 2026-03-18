@@ -11,6 +11,6 @@ Factory.define :model, relation: :model do |factory|
   factory.width 800
   factory.height 480
   factory.scale_factor 1
-  factory.palette_ids []
+  factory.palette_names []
   factory.css Hash.new
 end

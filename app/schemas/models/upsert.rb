@@ -18,10 +18,10 @@ module Terminus
         required(:scale_factor).filled :float
         required(:width).filled :integer
         required(:height).filled :integer
-        required(:palette_ids).maybe :array
+        required(:palette_names).maybe :array
         required(:css).maybe :hash
 
-        after(:value_coercer, &Coercers::LinesToArray.curry[:palette_ids])
+        after(:value_coercer, &Coercers::LinesToArray.curry[:palette_names])
         after(:value_coercer, &Coercers::JSONToHash.curry[:css])
       end
     end

@@ -20,7 +20,7 @@ RSpec.describe Terminus::Schemas::Models::Upsert do
         scale_factor: 1.8,
         width: 1872,
         height: 1404,
-        palette_ids: "bw gray-4 gray-16",
+        palette_names: "bw gray-4 gray-16",
         css: {classes: {size: "screen--lg", device: "screen--v2"}}.to_json
       }
     end
@@ -30,7 +30,7 @@ RSpec.describe Terminus::Schemas::Models::Upsert do
     end
 
     it "answers palette IDs array" do
-      expect(contract.call(attributes).to_h).to include(palette_ids: %w[bw gray-4 gray-16])
+      expect(contract.call(attributes).to_h).to include(palette_names: %w[bw gray-4 gray-16])
     end
 
     it "answers CSS hash" do
