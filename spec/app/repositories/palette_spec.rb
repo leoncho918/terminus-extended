@@ -12,7 +12,7 @@ RSpec.describe Terminus::Repositories::Palette, :db do
       palette
       two = Factory[:palette, name: "two"]
 
-      expect(repository.all).to eq([palette, two])
+      expect(repository.all.map(&:id)).to eq([palette, two].map(&:id))
     end
 
     it "answers empty array when records don't exist" do
@@ -26,7 +26,7 @@ RSpec.describe Terminus::Repositories::Palette, :db do
       Factory[:palette, kind: "trmnl"]
       repository.delete_all kind: ["trmnl"]
 
-      expect(repository.all).to contain_exactly(palette)
+      expect(repository.all.map(&:id)).to contain_exactly(palette.id)
     end
 
     it "answers number of records deleted" do
