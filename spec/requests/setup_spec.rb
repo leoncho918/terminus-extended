@@ -4,10 +4,10 @@ require "hanami_helper"
 
 RSpec.describe "/api/setup", :db do
   let(:device) { Factory[:device, model_id: model.id] }
-  let(:model) { Factory[:model, name: "og_png"] }
+  let(:model) { Factory[:model, name: "og_plus"] }
 
   let :headers do
-    {"HTTP_FW_VERSION" => "1.2.3", "HTTP_ID" => "A1:B2:C3:D4:E5:F6", "HTTP_MODEL" => "og_png"}
+    {"HTTP_FW_VERSION" => "1.2.3", "HTTP_ID" => "A1:B2:C3:D4:E5:F6", "HTTP_MODEL" => "og"}
   end
 
   it "answers new device when device doesn't exist" do

@@ -38,7 +38,7 @@ RSpec.describe Terminus::Aspects::Firmware::Headers::Parser do
           host: "https://localhost",
           user_agent: "ESP32HTTPClient",
           mac_address: "A1:B2:C3:D4:E5:F6",
-          model_name: "og_png",
+          model_name: "og_plus",
           api_key: "abc123",
           refresh_rate: 25,
           battery: 4.74,

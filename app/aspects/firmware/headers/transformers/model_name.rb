@@ -15,17 +15,17 @@ module Terminus
             include Initable[
               key: :HTTP_MODEL,
               map: {
-                "og" => "og_png",
+                "og" => "og_plus",
                 "reTerminal E1001" => "seeed_e1001",
                 "reTerminal E1002" => "seeed_e1002",
                 "seeed_esp32c3" => "seeed_e1001",
                 "seeed_esp32s3" => "seeed_e1002",
                 "waveshare" => "waveshare_4_26",
                 "x" => "v2",
-                "xiao_epaper_display" => "og_png",
-                "XTEINK_X4" => "og_png"
+                "xiao_epaper_display" => "og_plus",
+                "XTEINK_X4" => "xteink_x4"
               },
-              fallback: "og_png"
+              fallback: "og_plus"
             ]
 
             include Dry::Monads[:result]
