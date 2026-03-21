@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
 require "dry/monads"
-require "initable"
 
 module Terminus
   module Aspects
     module Screens
       # Compresses BMPs as PNGs, otherwise skips.
       class Compressor
-        include Deps[:mini_magick]
+        include Deps[mini_magick: "mini_magick.core"]
         include Dry::Monads[:result]
 
         def call input_path
@@ -25,9 +24,9 @@ module Terminus
         private
 
         def convert input_path, output_path
-          mini_magick.convert do |converter|
-            converter << input_path.to_s
-            converter << output_path.to_s
+          mini_magick.convert do |tool|
+            tool << input_path.to_s
+            tool << output_path.to_s
           end
         end
       end

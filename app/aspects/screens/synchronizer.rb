@@ -14,7 +14,6 @@ module Terminus
       # :reek:DataClump
       class Synchronizer
         include Deps[
-          :mini_magick,
           :logger,
           "aspects.downloader",
           "aspects.screens.compressor",

@@ -9,7 +9,11 @@ module Terminus
       module Upserters
         # Creates screen record with image attachment from unprocessed image URI.
         class Unprocessed
-          include Deps[:mini_magick, "aspects.screens.converter", repository: "repositories.screen"]
+          include Deps[
+            "mini_magick.image",
+            "aspects.screens.converter",
+            repository: "repositories.screen"
+          ]
           include Dry::Monads[:result]
 
           using Refinements::Struct
@@ -29,10 +33,10 @@ module Terminus
             mold.with! input_path: Pathname(directory).join("input.png"),
                        output_path: directory.join(mold.filename)
 
-            mini_magick::Image.open(mold.content)
-                              .write(mold.input_path)
-                              .then { converter.call mold }
-                              .bind { |path| save mold, path }
+            image.open(mold.content)
+                 .write(mold.input_path)
+                 .then { converter.call mold }
+                 .bind { |path| save mold, path }
           end
 
           def save(mold, path) = Success repository.upsert_with_image(path, mold, struct)

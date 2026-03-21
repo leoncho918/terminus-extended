@@ -8,7 +8,7 @@ module Terminus
       module Upserters
         # Creates screen record with image attachment from preprocesed image URI.
         class Preprocessed
-          include Deps[:mini_magick, repository: "repositories.screen"]
+          include Deps["mini_magick.image", repository: "repositories.screen"]
           include Dry::Monads[:result]
 
           def initialize(struct: Terminus::Structs::Screen.new, **)
@@ -24,7 +24,7 @@ module Terminus
 
           def process mold, directory
             path = Pathname(directory).join "input.png"
-            mini_magick::Image.open(mold.content).write(path).then { save mold, path }
+            image.open(mold.content).write(path).then { save mold, path }
           end
 
           def save(mold, path) = Success repository.upsert_with_image(path, mold, struct)

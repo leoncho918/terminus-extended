@@ -44,10 +44,10 @@ RSpec.describe Terminus::Aspects::Screens::Compressor do
       end
     end
 
-    it "answers failure when compression fails" do
+    it "answers failure when MiniMagick can't convert" do
       path = temp_dir.join "test.bmp"
       mini_magick = class_double MiniMagick
-      allow(mini_magick).to receive(:convert).and_raise MiniMagick::Error, "Danger!"
+      allow(mini_magick).to receive(:convert).and_raise(MiniMagick::Error, "Danger!")
       converter = described_class.new(mini_magick:)
 
       expect(converter.call(path)).to be_failure("Danger!")
