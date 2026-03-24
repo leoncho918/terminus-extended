@@ -11,11 +11,10 @@ module Terminus
         class Show < Base
           include Deps[
             :settings,
-            "aspects.screens.encoder",
+            "aspects.devices.synchronizer",
             "aspects.screens.rotator",
             "aspects.screens.gaffer",
-            firmware_repository: "repositories.firmware",
-            synchronizer: "aspects.devices.synchronizer"
+            firmware_repository: "repositories.firmware"
           ]
 
           include Initable[model: TRMNL::API::Models::Display]
@@ -24,7 +23,7 @@ module Terminus
 
           def handle request, response
             case synchronizer.call request.env
-              in Success(device) then process device, request, response
+              in Success(device) then rotate device, response
               else not_found response
             end
           end
@@ -35,23 +34,27 @@ module Terminus
 
           private
 
-          def process device, request, response
+          def rotate device, response
             rotator.call(device)
-                   .bind { |screen| encode screen, request.params, request.env }
-                   .either -> image_attributes { success device, image_attributes, response },
+                   .either -> screen { success device, screen, response },
                            -> message { error_for device, message, response }
           end
 
-          def success device, image_attributes, response
-            response.body = build_payload(device, image_attributes).to_json
+          def success device, screen, response
+            attributes = {
+              filename: screen.image_name_with_checksum,
+              image_url: screen.image_uri(host: settings.api_uri)
+            }
+
+            response.body = build_payload(device, attributes).to_json
           end
 
           def error_for device, message, response
             gaffer.call(device, message).bind { |screen| any_error device, screen, response }
           end
 
-          def build_payload device, image_attributes
-            model[**fetch_firmware(device), **image_attributes, **device.as_api_display]
+          def build_payload device, attributes
+            model[**fetch_firmware(device), **attributes, **device.as_api_display]
           end
 
           def fetch_firmware device
@@ -67,11 +70,6 @@ module Terminus
                 firmware_version: version
               }
             end
-          end
-
-          def encode screen, parameters, environment
-            encryption = :base_64 if (environment["HTTP_BASE64"] || parameters[:base_64]) == "true"
-            encoder.call screen, encryption:
           end
 
           def any_error device, screen, response

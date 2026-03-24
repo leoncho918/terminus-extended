@@ -51,44 +51,6 @@ RSpec.describe "/api/display", :db do
     )
   end
 
-  it "answers image data for valid Base 64 header" do
-    device
-    firmware
-    firmware_headers["HTTP_BASE64"] = "true"
-
-    get routes.path(:api_display), {}, **firmware_headers
-
-    expect(json_payload).to match(
-      filename: /terminus_welcome_#{device.friendly_id.downcase}-\h{32}\.png/,
-      firmware_url: "memory://abc123.bin",
-      firmware_version: "0.0.0",
-      image_url: %r(data:image/png;base64.+),
-      image_url_timeout: 0,
-      refresh_rate: 900,
-      reset_firmware: false,
-      special_function: "sleep",
-      update_firmware: true
-    )
-  end
-
-  it "answers image data for valid Base 64 parameter" do
-    device
-    firmware
-    get routes.path(:api_display), {base_64: true}, **firmware_headers
-
-    expect(json_payload).to match(
-      filename: /terminus_welcome_#{device.friendly_id.downcase}-\h{32}\.png/,
-      firmware_url: "memory://abc123.bin",
-      firmware_version: "0.0.0",
-      image_url: %r(data:image/png;base64.+),
-      image_url_timeout: 0,
-      refresh_rate: 900,
-      reset_firmware: false,
-      special_function: "sleep",
-      update_firmware: true
-    )
-  end
-
   it "removes firmware URI when device and latest firmware versions match" do
     device_repository.update device.id, firmware_version: "1.2.3"
     Factory[:firmware, :with_attachment, version: "1.2.3"]
