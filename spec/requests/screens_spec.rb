@@ -261,35 +261,6 @@ RSpec.describe "/api/screens", :db do
     end
   end
 
-  context "with invalid MIME Type" do
-    let(:model) { Factory[:model, mime_type: "text/html"] }
-
-    before do
-      post routes.path(:api_screen_create),
-           {screen: {model_id: model.id, label: "Test", name: "test", content: "test"}}.to_json,
-           "HTTP_AUTHORIZATION" => access_token,
-           "CONTENT_TYPE" => "application/json"
-    end
-
-    it "answers problem details" do
-      problem = Petail[
-        type: "/problem_details#screen_payload",
-        status: :unprocessable_content,
-        detail: "Unsupported MIME Type: text/html.",
-        instance: "/api/screens"
-      ]
-
-      expect(json_payload).to eq(problem.to_h)
-    end
-
-    it "answers content type and status" do
-      expect(last_response).to have_attributes(
-        content_type: "application/problem+json; charset=utf-8",
-        status: 422
-      )
-    end
-  end
-
   context "without body" do
     before do
       post routes.path(:api_screen_create),

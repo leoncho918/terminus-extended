@@ -19,9 +19,6 @@ module Terminus
           finder.call(model_id:, device_id:)
                 .fmap { |model| palette_attributes_for model }
                 .fmap { |model, palette| build model, palette, attributes }
-                .bind do |mold|
-                  mold.image? ? Success(mold) : Failure("Unsupported MIME Type: #{mold.mime_type}.")
-                end
         end
 
         private

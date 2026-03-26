@@ -81,13 +81,5 @@ RSpec.describe Terminus::Aspects::Screens::MoldBuilder, :db do
         ]
       )
     end
-
-    it "answers failure with invalid MIME Type" do
-      model = Factory[:model]
-
-      expect(builder.call(model_id: model.id, mime_type: "text/html")).to be_failure(
-        "Unsupported MIME Type: text/html."
-      )
-    end
   end
 end
