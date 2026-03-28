@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:support.sigenergy.com)",
+      "WebFetch(domain:automation.baldacchino.net)",
+      "WebFetch(domain:pdf.tritec.info)",
+      "WebFetch(domain:docs.eniris.io)",
+      "WebFetch(domain:www.sigenergy.com)",
+      "WebFetch(domain:developer.sigencloud.com)",
+      "WebFetch(domain:forums.whirlpool.net.au)",
+      "WebFetch(domain:help-center.meteocontrol.com)"
+    ]
+  }
+}
